@@ -5,6 +5,38 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Nosso Amor, Nossa História</title>
   <style>
+
+    .heart-button {
+  width: 100px;
+  height: 90px;
+  background-color: #e74c3c;
+  position: relative;
+  transform: rotate(-45deg);
+  cursor: pointer;
+  margin-top: 20px;
+  transition: transform 0.3s ease;
+}
+.heart-button:before,
+.heart-button:after {
+  content: "";
+  width: 100px;
+  height: 90px;
+  background-color: #e74c3c;
+  border-radius: 50%;
+  position: absolute;
+}
+.heart-button:before {
+  top: -50px;
+  left: 0;
+}
+.heart-button:after {
+  left: 50px;
+  top: 0;
+}
+.heart-button:hover {
+  transform: rotate(-45deg) scale(1.1);
+}
+
     body {
       margin: 0;
       font-family: 'Segoe UI', sans-serif;
@@ -111,7 +143,14 @@
   </style>
 </head>
 <body>
-  <div class="screen active" id="tela1">
+
+  <div class="screen active" id="tela0">
+  <h1>Nosso Amor 💜</h1>
+  <h2>Clique no coração para começar</h2>
+  <button onclick="nextScreen()">💙💜</button>
+</div>
+
+  <div class="screen" id="tela1">
     <h1>Nosso Amor, Nossa História</h1>
     <h2>Juntos desde 23/02/2026</h2>
     <h3>7 meses 💜</h3>
@@ -137,8 +176,9 @@
       <img src="ursinho.jpeg" alt="Ursinho">
       <img src="eu.jpeg" alt="Eu">
     </div>
-    <audio controls>
+    <audio id="player-audio" controls autoplay loop>
   <source src="te-seguro.mp3" type="audio/mpeg">
+  Seu navegador não suporta áudio.
 </audio>
 
     <h3 style="font-size: 1em; max-width: 400px;">Não existe palavra que alcance o tamanho do que sinto por você.</h3>
@@ -158,11 +198,19 @@
   </div>
 
   <script>
-    let current = 1;
+    let current = 0;
     const totalTelas = 6;
     let poemaIniciado = false;
     let frasesIniciado = false;
     let intervaloFrases = null;
+
+    document.addEventListener("click", function iniciarAudio() {
+  const audio = document.getElementById("player-audio");
+  audio.play();
+  // remove o listener depois da primeira vez
+  document.removeEventListener("click", iniciarAudio);
+});
+
 
     function nextScreen() {
       if (current >= totalTelas) return;
