@@ -1,0 +1,260 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Nosso Amor, Nossa História</title>
+  <style>
+    body {
+      margin: 0;
+      font-family: 'Segoe UI', sans-serif;
+      background: linear-gradient(180deg, #3B3B98, #8E44AD);
+      color: white;
+      text-align: center;
+      overflow: hidden;
+    }
+    .screen {
+      display: none;
+      height: 100vh;
+      width: 100vw;
+      padding: 20px;
+      box-sizing: border-box;
+      overflow-y: auto;
+    }
+    .active {
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      animation: fadeIn 1s;
+    }
+    h1, h2, h3 {
+      text-shadow: 0 0 10px #fff;
+      margin: 10px 0;
+    }
+    button {
+      background: linear-gradient(90deg, #3B3B98, #8E44AD);
+      border: none;
+      color: white;
+      padding: 10px 22px;
+      font-size: 1em;
+      border-radius: 10px;
+      cursor: pointer;
+      margin-top: 18px;
+      box-shadow: 0 0 10px rgba(255,255,255,0.5);
+      transition: opacity 0.3s;
+    }
+    button:hover { opacity: 0.8; }
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(10px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+    .poema {
+      font-size: 1.3em;
+      line-height: 1.8em;
+      white-space: pre-line;
+      margin: 15px 0;
+    }
+    audio {
+      margin: 15px 0;
+      border-radius: 30px;
+      box-shadow: 0 0 15px rgba(255,255,255,0.3);
+    }
+    .fotos-lado {
+      display: flex;
+      gap: 5%;
+      justify-content: center;
+      align-items: center;
+      width: 100%;
+      max-width: 440px;
+      margin-bottom: 15px;
+    }
+    .fotos-lado img {
+      width: 47%;
+      height: auto;
+      object-fit: contain;
+      border-radius: 16px;
+      box-shadow: 0 0 18px rgba(255,255,255,0.35);
+      transition: transform 0.3s ease;
+      background: rgba(255,255,255,0.08);
+      padding: 6px;
+      box-sizing: border-box;
+    }
+    .fotos-lado img:hover { transform: scale(1.04); }
+    .foto-unica {
+      width: 65%;
+      max-width: 260px;
+      height: auto;
+      object-fit: contain;
+      border-radius: 12px;
+      box-shadow: 0 0 12px rgba(255,255,255,0.4);
+      margin-top: 12px;
+      transition: transform 0.3s ease;
+    }
+    .foto-unica:hover { transform: scale(1.03); }
+    #contador {
+      font-size: 1.7em;
+      font-weight: bold;
+      margin: 15px 0;
+      text-shadow: 0 0 8px rgba(255,255,255,0.5);
+    }
+    #frase {
+      font-size: 1.4em;
+      font-style: italic;
+      min-height: 80px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: opacity 0.5s;
+      padding: 0 20px;
+    }
+  </style>
+</head>
+<body>
+  <div class="screen active" id="tela1">
+    <h1>Nosso Amor, Nossa História</h1>
+    <h2>Juntos desde 23/02/2026</h2>
+    <h3>7 meses 💜</h3>
+    <button onclick="nextScreen()">Nosso começo 💜</button>
+  </div>
+
+  <div class="screen" id="tela2">
+    <h2>Estamos juntos há...</h2>
+    <div id="contador"></div>
+    <h3>O tempo passa, mas nosso amor só cresce. ✨</h3>
+    <button onclick="nextScreen()">Continuar</button>
+  </div>
+
+  <div class="screen" id="tela3">
+    <h2>Luz que Me Guia</h2>
+    <div class="poema" id="poema"></div>
+    <button onclick="nextScreen()">Próxima memória</button>
+  </div>
+
+  <div class="screen" id="tela4">
+    <h2>💙💜</h2>
+    <div class="fotos-lado">
+      <img src="ursinho.jpeg" alt="Ursinho">
+      <img src="eu.jpeg" alt="Eu">
+    </div>
+    <audio id="player-audio" controls autoplay loop>
+  <source src="te-seguro.mp3" type="audio/mpeg">
+  Seu navegador não suporta áudio.
+</audio>
+
+    <h3 style="font-size: 1em; max-width: 400px;">Não existe palavra que alcance o tamanho do que sinto por você.</h3>
+    <img class="foto-unica" src="nos.jpeg" alt="Foto embaixo">
+    <button onclick="nextScreen()">Continuar</button>
+  </div>
+
+  <div class="screen" id="tela5">
+    <h2>💙💜</h2>
+    <p id="frase"></p>
+    <button onclick="nextScreen()">Finalizar</button>
+  </div>
+
+  <div class="screen" id="tela6">
+    <h2>Te amo mais a cada segundo! 💙💜</h2>
+    <button onclick="restart()">Voltar ao início</button>
+  </div>
+
+  <script>
+    let current = 1;
+    const totalTelas = 6;
+    let poemaIniciado = false;
+    let frasesIniciado = false;
+    let intervaloFrases = null;
+
+    function nextScreen() {
+      if (current >= totalTelas) return;
+      document.getElementById("tela" + current).classList.remove("active");
+      current++;
+      document.getElementById("tela" + current).classList.add("active");
+      if (current === 3 && !poemaIniciado) iniciarPoema();
+      if (current === 5 && !frasesIniciado) iniciarFrases();
+    }
+
+    function restart() {
+      document.getElementById("tela" + current).classList.remove("active");
+      document.getElementById("tela1").classList.add("active");
+      current = 1;
+      document.getElementById("poema").innerText = "";
+      poemaIniciado = false;
+      if (intervaloFrases) clearInterval(intervaloFrases);
+      document.getElementById("frase").innerText = "";
+      frasesIniciado = false;
+    }
+
+    const inicio = new Date("2026-02-23T00:00:00");
+    function atualizarContador() {
+      const agora = new Date();
+      const diff = agora - inicio;
+      const anos = Math.floor(diff / (1000 * 60 * 60 * 24 * 365));
+      const diasTotais = Math.floor(diff / (1000 * 60 * 60 * 24));
+      const dias = diasTotais % 365;
+      const horas = Math.floor((diff / (1000 * 60 * 60)) % 24);
+      const minutos = Math.floor((diff / (1000 * 60)) % 60);
+      const segundos = Math.floor((diff / 1000) % 60);
+      let texto = "";
+      if (anos > 0) texto += `${anos} Ano${anos !== 1 ? 's' : ''} `;
+      texto += `${dias} Dia${dias !== 1 ? 's' : ''} ${horas}h ${minutos}m ${segundos}s`;
+      document.getElementById("contador").innerText = texto;
+    }
+    atualizarContador();
+    setInterval(atualizarContador, 1000);
+
+const poemaTexto = [
+  "Teu olhar é luz que me guia,",
+  "mesmo nas noites mais escuras.",
+  "É canto que embala minha alma,",
+  "e transforma dor em ternura.",
+  "",
+  "Cada instante contigo é eternidade,",
+  "cada abraço, um universo inteiro.",
+  "E no balanço da vida que nos une,",
+  "descubro que amar você é meu destino verdadeiro."
+];
+
+    function iniciarPoema() {
+      poemaIniciado = true;
+    function mostrarPoema() {
+      if (linha < poemaTexto.length) {
+        document.getElementById("poema").innerText += poemaTexto[linha] + "\n";
+        linha++;
+        setTimeout(mostrarPoema, 2000);
+      }
+    }
+    let linha = 0;
+    mostrarPoema();
+  }
+
+  const frases = [
+    "E amar é viver no infinito.",
+    "Cada segundo contigo é um presente eterno.",
+    "Você é meu sonho acordada, minha realidade mais bonita.",
+    "Nosso amor é poesia que nunca termina.",
+    "Com você, até o silêncio é música.",
+    "O tempo passa, mas meu amor por você só cresce.",
+    "Cada batida do meu coração chama pelo teu nome.",
+    "Estar contigo é viver no infinito.",
+    "Você é meu lugar favorito no mundo.",
+    "Te amo mais do que palavras podem dizer."
+  ];
+  function iniciarFrases() {
+    frasesIniciado = true;
+    let i = 0;
+    const fraseEl = document.getElementById("frase");
+    function trocarFrase() {
+      fraseEl.style.opacity = 0;
+      setTimeout(() => {
+        fraseEl.innerText = frases[i];
+        fraseEl.style.opacity = 1;
+        i = (i + 1) % frases.length;
+      }, 500);
+    }
+    trocarFrase();
+    intervaloFrases = setInterval(trocarFrase, 4000);
+  }
+  </script>
+</body>
+</html>
